@@ -105,5 +105,5 @@ class TextModule(Module):
         window.set_inner_widget(text_editor)
 
 
-TextModule("text-module")
+# temporarily, as its suppressing image module: TextModule("text-module")
 print("text window Module instanced")
