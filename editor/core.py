@@ -38,7 +38,7 @@ class LeftDockBar(QDockWidget):
     widgets: QVBoxLayout # left_sidebar_layout
 
     def __init__(self, parent):
-        super().__init__("LeftDockBar", parent)
+        super().__init__("", parent)
         self.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
         left_sidebar_widget = QWidget()
         self.widgets = QVBoxLayout()
@@ -57,7 +57,7 @@ class RightDockBar(QDockWidget):
     widgets: QVBoxLayout # right_sidebar_layout
 
     def __init__(self, parent):
-        super().__init__("RightDockBar", parent)
+        super().__init__("", parent)
         self.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
         right_sidebar_widget = QWidget()
         self.widgets = QVBoxLayout()
@@ -73,7 +73,7 @@ class RightDockBar(QDockWidget):
 
 class BottomDockBar(QDockWidget):
     def __init__(self, parent):
-        super().__init__("BottomDockBar", parent)
+        super().__init__("", parent)
         self.setAllowedAreas(Qt.BottomDockWidgetArea)
         self.setFeatures(QDockWidget.NoDockWidgetFeatures)
 
@@ -94,13 +94,18 @@ class MainWindow(QMainWindow):
     left_sidebar: LeftDockBar
     right_sidebar: RightDockBar
 
+    inner_widget = None # Widget that appear in centre/main area
+
+    splitter = None # for inner purpose
+
     def __init__(self):
         super().__init__()
+        self.splitter = None
         self.initUI()
 
     def initUI(self):
         # Set flat style for all widgets
-        QApplication.setStyle("fusion")
+        QApplication.setStyle("windows") # fusion
         QApplication.setPalette(QApplication.style().standardPalette())
 
         self.menubar = MenuBar(self)
@@ -115,14 +120,15 @@ class MainWindow(QMainWindow):
         self.right_sidebar = RightDockBar(self)
         self.addDockWidget(Qt.RightDockWidgetArea, self.right_sidebar)
 
-        text_editor = QTextEdit()
-        splitter = QSplitter(Qt.Horizontal)
-        splitter.addWidget(self.left_sidebar)
-        splitter.addWidget(text_editor)
-        splitter.addWidget(self.right_sidebar)
-        splitter.setSizes([self.width() // 4, self.width() * 3 // 4, self.width() // 4])
+        self.inner_widget = QWidget()
 
-        self.setCentralWidget(splitter)
+        self.splitter = QSplitter(Qt.Horizontal)
+        self.splitter.addWidget(self.left_sidebar)
+        self.splitter.addWidget(self.inner_widget)
+        self.splitter.addWidget(self.right_sidebar)
+        self.splitter.setSizes([self.width() // 4, self.width() * 3 // 4, self.width() // 4])
+
+        self.setCentralWidget(self.splitter)
 
         self.bottom_bar = BottomDockBar(self)
         self.addDockWidget(Qt.BottomDockWidgetArea, self.bottom_bar)
@@ -134,25 +140,38 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Unified AI Tool")
         self.show()
 
+    def set_inner_widget(self, new_widget: QWidget):
+        self.splitter.insertWidget(1, new_widget)
+        old_widget: QWidget = self.splitter.widget(2)
+        old_widget.setParent(None)
+        del old_widget
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-class Plugin:
-    plugins = [] # static variable holding list of all plugins
+class Module:
+    modules = [] # static variable holding list of all modules
 
-    name : str # Unique name of this plugin
+    name : str # Unique name of this module
+
+    @staticmethod
+    def get_module_by_name(name: str):
+        for module_ in Module.modules:
+            if module_.name == name:
+                return module_
+        return None
 
     def __init__(self, name):
-        for plugin in Plugin.plugins:
+        for plugin in Module.modules:
             if plugin.name == name:
                 print("Warning: Misbehaviour may occur since plugin with name " + plugin.name + " already exists.")
                 print("If you are creating a new plugin, consider changing its name.")
 
         self.name = name
-        Plugin.plugins.append(self)
+        Module.modules.append(self)
 
     """
     param `window` in following function can be used in overriding functions as:
