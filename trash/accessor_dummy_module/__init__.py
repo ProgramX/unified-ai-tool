@@ -1,5 +1,5 @@
 
-from modules.dummy_module import *
+from trash.dummy_module import *
 
 class AccessorModule(Module):
     def on_window(self, window: MainWindow):

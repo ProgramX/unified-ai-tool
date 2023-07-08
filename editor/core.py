@@ -42,6 +42,7 @@ class LeftDockBar(QDockWidget):
         self.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
         left_sidebar_widget = QWidget()
         self.widgets = QVBoxLayout()
+        self.widgets.setAlignment(self.widgets.alignment() | Qt.AlignmentFlag.AlignTop)  # Set alignment to top
         left_sidebar_widget.setLayout(self.widgets)
 
         left_scroll_area = QScrollArea()
@@ -61,6 +62,7 @@ class RightDockBar(QDockWidget):
         self.setAllowedAreas(Qt.LeftDockWidgetArea | Qt.RightDockWidgetArea)
         right_sidebar_widget = QWidget()
         self.widgets = QVBoxLayout()
+        self.widgets.setAlignment(self.widgets.alignment() | Qt.AlignmentFlag.AlignTop)  # Set alignment to top
         right_sidebar_widget.setLayout(self.widgets)
 
         left_scroll_area = QScrollArea()
@@ -105,7 +107,7 @@ class MainWindow(QMainWindow):
 
     def initUI(self):
         # Set flat style for all widgets
-        QApplication.setStyle("windows") # fusion
+        QApplication.setStyle("fusion") # windows
         QApplication.setPalette(QApplication.style().standardPalette())
 
         self.menubar = MenuBar(self)
