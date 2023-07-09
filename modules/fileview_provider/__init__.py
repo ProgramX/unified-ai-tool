@@ -35,27 +35,22 @@ class FileView(Module):
     workspace_path = ""  # Replace with the actual workspace path
 
     def on_window(self, window: MainWindow):
+        """
         # Add some action buttons such as create new file, open file, etc.
-        new_file_button = QToolButton()
-        new_file_button.setText("\U0001F4C4")
-        new_file_button.setIconSize(QSize(32, 32))
-        new_file_button.setFixedSize(32, 32)
+        toolbar = QToolBar()
+        toolbar.setIconSize(QSize(32, 32))
+        toolbar.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
 
-        open_file_button = QToolButton()
-        open_file_button.setText("\U0001F4C2")
-        open_file_button.setIconSize(QSize(32, 32))
-        open_file_button.setFixedSize(32, 32)
+        new_file_action = QAction("\U0001F4C4", toolbar)
+        open_file_action = QAction("\U0001F4C2", toolbar)
+        delete_file_action = QAction("\U0001F5D1\ufe0f", toolbar)
 
-        delete_file_button = QToolButton()
-        delete_file_button.setText("\U0001F5D1\ufe0f")
-        delete_file_button.setIconSize(QSize(32, 32))
-        delete_file_button.setFixedSize(32, 32)
+        toolbar.addAction(new_file_action)
+        toolbar.addAction(open_file_action)
+        toolbar.addAction(delete_file_action)
 
-        hbox = QHBoxLayout()
-        hbox.addWidget(new_file_button)
-        hbox.addWidget(open_file_button)
-        hbox.addWidget(delete_file_button)
-        window.left_sidebar.widgets.addLayout(hbox)
+        window.left_sidebar.widgets.addWidget(toolbar)
+        """
 
         fileview_widget: FileTreeView = FileTreeView(self.workspace_path)
         window.left_sidebar.widgets.addWidget(fileview_widget)

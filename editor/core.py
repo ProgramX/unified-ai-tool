@@ -106,9 +106,11 @@ class MainWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        # Set flat style for all widgets
-        QApplication.setStyle("fusion") # windows
+
+        # Set style for all widgets
+        QApplication.setStyle("fusion") # windows, fusion, macintosh, windowsvista, windowsxp
         QApplication.setPalette(QApplication.style().standardPalette())
+
 
         self.menubar = MenuBar(self)
         self.setMenuBar(self.menubar)

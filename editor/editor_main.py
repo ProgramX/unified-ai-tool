@@ -14,6 +14,7 @@
 
 from editor.core import *
 
+from .styles import flat_light_mode, flat_dark_mode
 
 # Get the list of files and directories in the plugins directory
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -33,6 +34,7 @@ for this_module in modules:
 def editor_main():
     app = QApplication(sys.argv)
     editor_window = MainWindow()
+    editor_window.setStyleSheet(flat_dark_mode.flat_dark_mode_style)
 
     # After the core has been loaded, we load plugins:
     for _this_module in Module.modules:

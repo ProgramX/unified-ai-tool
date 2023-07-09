@@ -123,7 +123,13 @@ class TextProvider(Module):
                 self.text_editor.setPlainText(text)
 
     def save_text_editor_content(self):
-        pass
+        file_dialog = QFileDialog()
+        file_dialog.setFileMode(QFileDialog.AnyFile)
+        if file_dialog.exec():
+            file_name = file_dialog.selectedFiles()[0]
+            text_content = self.text_editor.toPlainText()
+            with open(file_name, "w") as file:
+                file.write(text_content)
 
     def open_provider_window(self, window: MainWindow):
         self.text_editor = CodeEditor()
