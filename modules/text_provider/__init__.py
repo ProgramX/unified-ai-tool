@@ -97,24 +97,70 @@ class CodeEditor(QPlainTextEdit):
 
 
 class TextProvider(Module):
+    text_editor: CodeEditor
 
     # Runs a script in cmd. Makes sure to keep cmd open until the user presses enter after script execution is completed.
     def run_script(self, text_editor: CodeEditor):
         pass
 
+    def toggle_copilot(self, window: MainWindow):
+        copilot_button = window.findChild(QPushButton, "copilot_button")
+        if copilot_button.text() == "Copilot: Enabled":
+            copilot_button.setText("Copilot: Disabled")
+            copilot_button.setStyleSheet("background-color: red")
+        else:
+            copilot_button.setText("Copilot: Enabled")
+            copilot_button.setStyleSheet("background-color: green")
+
+    def open_file_dialogue(self):
+        file_dialog = QFileDialog()
+        file_dialog.setFileMode(QFileDialog.AnyFile)
+        if file_dialog.exec():
+            file_name = file_dialog.selectedFiles()[0]
+            file = open(file_name, "r")
+            with file:
+                text = file.read()
+                self.text_editor.setPlainText(text)
+
+    def save_text_editor_content(self):
+        pass
+
     def open_provider_window(self, window: MainWindow):
-        text_editor = CodeEditor()
-        window.set_inner_widget(text_editor)
+        self.text_editor = CodeEditor()
+        window.set_inner_widget(self.text_editor)
 
         # Add a green run script button to the right dockbar
-        run_script_button = QPushButton("Run Script")
+        run_script_button = QPushButton("\U0001F4DC Run Script")
         run_script_button.setStyleSheet("background-color: green")
-        run_script_button.clicked.connect(lambda: self.run_script(text_editor))
+        run_script_button.clicked.connect(lambda: self.run_script(self.text_editor))
         window.right_sidebar.widgets.addWidget(run_script_button)
+
+        # Add other action buttons as well
+        new_file_button = QPushButton("\U0001F4C4 New File")
+        open_file_button = QPushButton("\U0001F4C2 Open File")
+        new_file_button.clicked.connect(self.open_file_dialogue)
+        open_file_button.clicked.connect(self.open_file_dialogue)
+        hbox = QHBoxLayout()
+        hbox.addWidget(new_file_button)
+        hbox.addWidget(open_file_button)
+        window.right_sidebar.widgets.addLayout(hbox)
+
+        save_file_button = QPushButton("\U0001F4BE Save")
+        save_file_button.setStyleSheet("background-color: blue")
+        save_file_button.clicked.connect(self.save_text_editor_content)
+        window.right_sidebar.widgets.addWidget(save_file_button)
+
+        # Add a text editor copilot button at the statusbar
+        copilot_button = QPushButton("Copilot: Enabled", window)
+        copilot_button.setObjectName("copilot_button")
+        copilot_button.setStyleSheet("background-color: green")
+        copilot_button.clicked.connect(lambda: self.toggle_copilot(window))
+        window.status_bar.addPermanentWidget(copilot_button)
+
 
 
     def create_toolbar_entry(self, window: MainWindow):
-        action = window.toolbar.addAction("Text Editor")
+        action = window.toolbar.addAction("\U0001F4C4 Text Editor")
         action.triggered.connect(lambda: self.open_provider_window(window))
 
     def on_window(self, window: MainWindow):

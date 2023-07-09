@@ -55,7 +55,7 @@ class WelcomeScreen(Module):
         window.set_inner_widget(welcome_widget)
 
     def create_toolbar_entry(self, window: MainWindow):
-        action = window.toolbar.addAction("Welcome Screen")
+        action = window.toolbar.addAction("\U0001F3E0 Welcome Screen")
         window.toolbar.addSeparator()
         action.triggered.connect(lambda: self.open_provider_window(window))
 
