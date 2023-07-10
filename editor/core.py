@@ -100,6 +100,21 @@ class MainWindow(QMainWindow):
 
     splitter = None # for inner purpose
 
+    def clear_right_sidebar(self):
+        self.right_sidebar.deleteLater() # is logic correct?
+        self.right_sidebar = RightDockBar(self)
+        self.addDockWidget(Qt.RightDockWidgetArea, self.right_sidebar)
+
+    def clear_bottom_bar(self):
+        self.bottom_bar.deleteLater()
+        self.bottom_bar = BottomDockBar(self)
+        self.addDockWidget(Qt.BottomDockWidgetArea, self.bottom_bar)
+
+    def clear_status_bar(self):
+        self.status_bar.deleteLater()
+        self.status_bar = StatusBar()
+        self.setStatusBar(self.status_bar)
+
     def __init__(self):
         super().__init__()
         self.splitter = None

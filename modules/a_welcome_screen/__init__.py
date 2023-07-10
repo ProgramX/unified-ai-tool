@@ -51,6 +51,8 @@ class WelcomeWidget(QWidget):
 
 class WelcomeScreen(Module):
     def open_provider_window(self, window: MainWindow):
+        window.clear_right_sidebar()
+        window.clear_status_bar()
         welcome_widget = WelcomeWidget()
         window.set_inner_widget(welcome_widget)
 

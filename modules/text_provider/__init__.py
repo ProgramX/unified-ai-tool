@@ -68,7 +68,7 @@ class CodeEditor(QPlainTextEdit):
         while block.isValid() and top <= event.rect().bottom():
             if block.isVisible() and bottom >= event.rect().top():
                 number = str(block_number + 1)
-                painter.setPen(Qt.black)
+                painter.setPen(Qt.white)
                 if block_number + 1 == current_line_number:
                     painter.setPen(Qt.red)  # Set the pen color to red for the current line number
                 painter.drawText(0, top, self.lineNumberArea.width(), self.fontMetrics().height(),
@@ -97,7 +97,7 @@ class CodeEditor(QPlainTextEdit):
 
 
 class TextProvider(Module):
-    text_editor: CodeEditor
+    text_editor: CodeEditor = None
 
     # Runs a script in cmd. Makes sure to keep cmd open until the user presses enter after script execution is completed.
     def run_script(self, text_editor: CodeEditor):
@@ -131,8 +131,21 @@ class TextProvider(Module):
             with open(file_name, "w") as file:
                 file.write(text_content)
 
+    def clear_provider_window(self, window: MainWindow):
+        # Clear inner window
+        window.set_inner_widget(QWidget())
+        # Clear right sidebar
+        window.clear_right_sidebar()
+        # Remove copilot button
+        copilot_button = window.findChild(QPushButton, "copilot_button")
+        if copilot_button:
+            window.status_bar.removeWidget(copilot_button)
+            copilot_button.deleteLater()
+
     def open_provider_window(self, window: MainWindow):
-        self.text_editor = CodeEditor()
+        self.clear_provider_window(window)
+        if self.text_editor is None:
+            self.text_editor = CodeEditor()
         window.set_inner_widget(self.text_editor)
 
         # Add a green run script button to the right dockbar
@@ -162,8 +175,6 @@ class TextProvider(Module):
         copilot_button.setStyleSheet("background-color: green")
         copilot_button.clicked.connect(lambda: self.toggle_copilot(window))
         window.status_bar.addPermanentWidget(copilot_button)
-
-
 
     def create_toolbar_entry(self, window: MainWindow):
         action = window.toolbar.addAction("\U0001F4C4 Text Editor")
