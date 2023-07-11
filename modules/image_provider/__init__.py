@@ -87,6 +87,7 @@ class ImageProvider(Module):
         text = input.toPlainText()
         if text:
             pass # use OpenAI API to generate image or use own model
+
     def clear_provider_window(self, window: MainWindow):
         # Clear inner window
         window.set_inner_widget(QWidget())
@@ -106,6 +107,10 @@ class ImageProvider(Module):
         window.set_inner_widget(self.image_viewer)
 
         # Add a image generator tools gui to right sidebar
+        generate_image_label = QLabel("Generate Image")
+        generate_image_label.setStyleSheet("font-weight: bold")
+        window.right_sidebar.widgets.addWidget(generate_image_label)
+
         image_generator_input = QPlainTextEdit()
         image_generator_input.setPlaceholderText("Enter text to generate image")
         image_generator_input.setFixedHeight(3 * image_generator_input.fontMetrics().lineSpacing())
@@ -117,26 +122,22 @@ class ImageProvider(Module):
         window.right_sidebar.widgets.addWidget(image_generation_button)
 
         # Add some tools to the right sidebar for image editing
-        toolbar = QToolBar()
-        toolbar.setIconSize(QSize(32, 32))
-        toolbar.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        tools_label = QLabel("Tools")
+        tools_label.setStyleSheet("font-weight: bold")
+        window.right_sidebar.widgets.addWidget(tools_label)
 
-        pencil_action = QAction("\u270F\ufe0f pencil", toolbar)
-        toolbar.addAction(pencil_action)
+        button_grid = QGridLayout()
+        button_grid.setSpacing(2)
+        button_grid.setHorizontalSpacing(0)
 
-        eraser_action = QAction("\U0001FA78 eraser", toolbar)
-        toolbar.addAction(eraser_action)
+        emoji_codes = ["\u270F\ufe0f", "\U0001FA78", "\U0001F33E", "\U0001F9EA", "\U0001F533", "\U0001F4BE", "\U0001F4DD", "\U0001F4E1", "\U0001F4E5", "\U0001F4F7", "\U0001F5C3", "\U0001F4BB", "\U0001F4CA", "\U0001F4C1", "\U0001F4C4", "\U0001F4C5", "\U0001F4C6", "\U0001F4D6", "\U0001F4DC", "\U0001F4DD", "\U0001F4DE", "\U0001F4E2", "\U0001F4E3", "\U0001F4E4", "\U0001F4E8", "\U0001F4EC", "\U0001F4EF", "\U0001F4F0", "\U0001F4F1", "\U0001F4F2", "\U0001F4F3", "\U0001F4F4", "\U0001F4F5", "\U0001F4F6", "\U0001F4F8", "\U0001F4F9", "\U0001F4FA", "\U0001F4FB", "\U0001F4FC", "\U0001F4FD", "\U0001F4FE", "\U0001F4FF", "\U0001F500", "\U0001F501", "\U0001F502"]
+        for i, emoji_code in enumerate(emoji_codes):
+            button = QPushButton(emoji_code)
+            button.setFixedSize(40, 40)
+            button.setStyleSheet("font-size: 18px")
+            button_grid.addWidget(button, i // 6, i % 6)
 
-        selection_action = QAction("\U0001F33E selection", toolbar)
-        toolbar.addAction(selection_action)
-
-        bucket_fill_action = QAction("\U0001F9EA bucket fill", toolbar)
-        toolbar.addAction(bucket_fill_action)
-
-        background_remover_action = QAction("\U0001F533 background remover", toolbar)
-        toolbar.addAction(background_remover_action)
-
-        window.right_sidebar.widgets.addWidget(toolbar)
+        window.right_sidebar.widgets.addLayout(button_grid)
 
 
 
