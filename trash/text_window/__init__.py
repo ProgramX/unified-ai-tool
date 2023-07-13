@@ -100,7 +100,7 @@ class CodeEditor(QPlainTextEdit):
 
 
 class TextModule(Module):
-    def on_window(self, window: MainWindow):
+    def on_ready(self, window: MainWindow):
         text_editor = CodeEditor()
         window.set_inner_widget(text_editor)
 

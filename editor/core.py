@@ -209,7 +209,7 @@ class Module:
        window.statusBar().addPermanentWidget(enable_copilot_button)
     """
     @abstractmethod
-    def on_window(self, window: MainWindow):
+    def on_ready(self, window: MainWindow):
         pass
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

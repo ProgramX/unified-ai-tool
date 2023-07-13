@@ -24,7 +24,7 @@ must be used for seamless integration and registration of more modules.
 from editor.core import *
 
 class DummyModule(Module):
-    def on_window(self, window: MainWindow):
+    def on_ready(self, window: MainWindow):
         text_editor = QPlainTextEdit()
         window.set_inner_widget(text_editor)
 

@@ -38,6 +38,6 @@ def editor_main():
 
     # After the core has been loaded, we load plugins:
     for _this_module in Module.modules:
-        _this_module.on_window(editor_window)
+        _this_module.on_ready(editor_window)
 
     sys.exit(app.exec())

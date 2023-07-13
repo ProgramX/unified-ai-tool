@@ -145,7 +145,7 @@ class ImageProvider(Module):
         action = window.toolbar.addAction("\U0001F58C\ufe0f Image Editor")
         action.triggered.connect(lambda: self.open_provider_window(window))
 
-    def on_window(self, window: MainWindow):
+    def on_ready(self, window: MainWindow):
         self.create_toolbar_entry(window)
 
 

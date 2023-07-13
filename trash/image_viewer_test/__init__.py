@@ -96,7 +96,7 @@ class ImageViewerWidget(QWidget):
 
 
 class IVW(Module):
-    def on_window(self, window: MainWindow):
+    def on_ready(self, window: MainWindow):
         iv = ImageViewerWidget(window)
         iv.set_image_url("https://www.w3schools.com/html/pic_trulli.jpg")
         window.set_inner_widget(iv)

@@ -44,7 +44,7 @@ class LayoutProvider(Module):
             enable_copilot_button.setStyleSheet("background-color: green; color: white; font-weight: bold")
 
 
-    def on_window(self, window: MainWindow):
+    def on_ready(self, window: MainWindow):
         window.set_inner_widget(QWidget()) # replace by WelcomeScreenWidget
 
         # File menu

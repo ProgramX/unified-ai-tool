@@ -57,7 +57,7 @@ class TerminalWidget(QPlainTextEdit):
 
 class TerminalProvider(Module):
 
-    def on_window(self, window: MainWindow):
+    def on_ready(self, window: MainWindow):
         window.bottom_bar.setWidget(TerminalWidget())
 
 

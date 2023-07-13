@@ -4,6 +4,14 @@ from PySide6.QtCore import *
 from PySide6.QtGui import *
 
 
+from editor.core import *
+from PySide6.QtWidgets import *
+from PySide6.QtCore import *
+from PySide6.QtGui import *
+
+
+
+
 class FileTreeView(QWidget):
     def __init__(self, workspace_path):
         super().__init__()
@@ -21,6 +29,9 @@ class FileTreeView(QWidget):
 
         self.file_tree_view.clicked.connect(self.open_file)
 
+        self.file_tree_view.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.file_tree_view.customContextMenuRequested.connect(self.show_context_menu)
+
         layout = QVBoxLayout(self)
         layout.addWidget(self.file_tree_view)
 
@@ -30,11 +41,54 @@ class FileTreeView(QWidget):
             # Code to open the file goes here
             print("Opening file:", file_path)
 
+    def show_context_menu(self, pos):
+        index = self.file_tree_view.indexAt(pos)
+        if index.isValid():
+            menu = QMenu(self)
+
+            new_file_action = None
+            new_directory_action = None
+            rename_action = None
+            delete_action = None
+            open_action = None
+
+
+            if self.model.isDir(index):
+                new_file_action = menu.addAction("New File")
+                new_directory_action = menu.addAction("New Directory")
+                rename_action = menu.addAction("Rename")
+                delete_action = menu.addAction("Delete")
+            else:
+                rename_action = menu.addAction("Rename")
+                delete_action = menu.addAction("Delete")
+                open_action = menu.addAction("Open")
+
+            action = menu.exec_(self.file_tree_view.viewport().mapToGlobal(pos))
+            if action:
+                file_path = self.model.filePath(index)
+                if action == new_file_action:
+                    print("New File action triggered" + file_path)
+                    # Perform the desired action for "New File"
+                elif action == new_directory_action:
+                    print("New Directory action triggered" + file_path)
+                    # Perform the desired action for "New Directory"
+                elif action == rename_action:
+                    print("Rename action triggered" + file_path)
+                    # Perform the desired action for "Rename"
+                elif action == delete_action:
+                    print("Delete action triggered" + file_path)
+                    # Perform the desired action for "Delete"
+                elif action == open_action:
+                    print("Open action triggered" + file_path)
+                    # Perform the desired action for "Open"
+
+
+
 
 class FileView(Module):
-    workspace_path = ""  # Replace with the actual workspace path
+    workspace_path = ".../"  # Replace with the actual workspace path
 
-    def on_window(self, window: MainWindow):
+    def on_ready(self, window: MainWindow):
         """
         # Add some action buttons such as create new file, open file, etc.
         toolbar = QToolBar()
