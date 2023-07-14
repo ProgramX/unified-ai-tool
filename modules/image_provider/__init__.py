@@ -63,26 +63,6 @@ class FancyImageViewer(QGraphicsView):
 class ImageProvider(Module):
     image_viewer: FancyImageViewer = None
 
-    def open_file_dialogue(self):
-        file_dialog = QFileDialog()
-        file_dialog.setFileMode(QFileDialog.AnyFile)
-        if file_dialog.exec():
-            file_name = file_dialog.selectedFiles()[0]
-            file = open(file_name, "r")
-            with file:
-                text = file.read()
-                self.image_viewer.setPlainText(text)
-
-    # TODO: MAKE IT FOR IMAGES RAHTER THAN TEXT
-    def save_text_editor_content(self):
-        file_dialog = QFileDialog()
-        file_dialog.setFileMode(QFileDialog.AnyFile)
-        if file_dialog.exec():
-            file_name = file_dialog.selectedFiles()[0]
-            text_content = self.image_viewer.toPlainText()
-            with open(file_name, "w") as file:
-                file.write(text_content)
-
     def generate_image(self, input: QPlainTextEdit):
         text = input.toPlainText()
         if text:
@@ -147,6 +127,10 @@ class ImageProvider(Module):
 
     def on_ready(self, window: MainWindow):
         self.create_toolbar_entry(window)
+
+    def on_notif(self, notif: Notif):
+        if notif.command == "open_file":
+            image_provider.image_viewer.loadImage(notif.data)
 
 
 image_provider = ImageProvider("image_provider")

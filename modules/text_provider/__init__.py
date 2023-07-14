@@ -4,6 +4,7 @@ from PySide6.QtWidgets import *
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 import numpy as np
+import magic
 
 
 class LineNumberArea(QWidget):
@@ -148,6 +149,12 @@ class TextProvider(Module):
             self.text_editor = CodeEditor()
         window.set_inner_widget(self.text_editor)
 
+
+        text_use_case_input = QPlainTextEdit()
+        text_use_case_input.setPlaceholderText("Define purpose of text. Coding, story, poetry? Useful for AI to optimize suggestions.")
+        text_use_case_input.setFixedHeight(3 * text_use_case_input.fontMetrics().lineSpacing())
+        window.right_sidebar.widgets.addWidget(text_use_case_input)
+
         # Add a green run script button to the right dockbar
         run_script_button = QPushButton("\U0001F4DC Run Script")
         run_script_button.setStyleSheet("background-color: green")
@@ -182,6 +189,20 @@ class TextProvider(Module):
 
     def on_ready(self, window: MainWindow):
         self.create_toolbar_entry(window)
+
+    def on_notif(self, notif: Notif):
+        if notif.command == "open_file":
+            # Check the file type
+            file_type = magic.from_file(notif.data, mime=True)
+
+            # Proceed only if the file type is text-based
+            if file_type.startswith('text/'):
+                file = open(notif.data, "r")
+                with file:
+                    text = file.read()
+                    text_provider.text_editor.setPlainText(text)
+            else:
+                print("The file is not a text file.")
 
 
 text_provider = TextProvider("text_provider")

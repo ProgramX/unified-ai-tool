@@ -1,4 +1,3 @@
-
 # Author: Mujtaba
 # Date: July 2, 2023
 
@@ -34,8 +33,7 @@ class ToolBar(QToolBar):
 
 
 class LeftDockBar(QDockWidget):
-
-    widgets: QVBoxLayout # left_sidebar_layout
+    widgets: QVBoxLayout  # left_sidebar_layout
 
     def __init__(self, parent):
         super().__init__("", parent)
@@ -54,8 +52,7 @@ class LeftDockBar(QDockWidget):
 
 
 class RightDockBar(QDockWidget):
-
-    widgets: QVBoxLayout # right_sidebar_layout
+    widgets: QVBoxLayout  # right_sidebar_layout
 
     def __init__(self, parent):
         super().__init__("", parent)
@@ -85,7 +82,6 @@ class StatusBar(QStatusBar):
         super().__init__()
 
 
-
 class MainWindow(QMainWindow):
     menubar: MenuBar
     toolbar: ToolBar
@@ -96,12 +92,12 @@ class MainWindow(QMainWindow):
     left_sidebar: LeftDockBar
     right_sidebar: RightDockBar
 
-    inner_widget = None # Widget that appear in centre/main area
+    inner_widget = None  # Widget that appear in centre/main area
 
-    splitter = None # for inner purpose
+    splitter = None  # for inner purpose
 
     def clear_right_sidebar(self):
-        self.right_sidebar.deleteLater() # is logic correct?
+        self.right_sidebar.deleteLater()  # is logic correct?
         self.right_sidebar = RightDockBar(self)
         self.addDockWidget(Qt.RightDockWidgetArea, self.right_sidebar)
 
@@ -121,11 +117,9 @@ class MainWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
-
         # Set style for all widgets
-        QApplication.setStyle("fusion") # windows, fusion, macintosh, windowsvista, windowsxp
+        QApplication.setStyle("fusion")  # windows, fusion, macintosh, windowsvista, windowsxp
         QApplication.setPalette(QApplication.style().standardPalette())
-
 
         self.menubar = MenuBar(self)
         self.setMenuBar(self.menubar)
@@ -171,10 +165,19 @@ class MainWindow(QMainWindow):
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-class Module:
-    modules = [] # static variable holding list of all modules
+class Notif:
+    command: str
+    data: str
 
-    name : str # Unique name of this module
+    def __init__(self, command: str, data: str):
+        self.command = command
+        self.data = data
+
+
+class Module:
+    modules = []  # static variable holding list of all modules
+
+    name: str  # Unique name of this module
 
     @staticmethod
     def get_module_by_name(name: str):
@@ -208,16 +211,18 @@ class Module:
     5. window.status_bar.SOMESHIT OR
        window.statusBar().addPermanentWidget(enable_copilot_button)
     """
+
     @abstractmethod
     def on_ready(self, window: MainWindow):
         pass
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    # called when a module is notified
+    @abstractmethod
+    def on_notif(self, notif: Notif):
+        pass
 
-
-
-
+    # notify all modules of `notif`
+    def notify(notif: Notif):
+        for module_ in Module.modules:
+            module_.on_notif(notif)
 

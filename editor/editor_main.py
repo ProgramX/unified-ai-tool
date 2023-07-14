@@ -14,7 +14,7 @@
 
 from editor.core import *
 
-from .styles import flat_light_mode, flat_dark_mode
+from .styles import flat_light_mode, flat_dark_mode, flat_matte_black
 
 # Get the list of files and directories in the plugins directory
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

@@ -7,7 +7,7 @@ import subprocess
 
 packages = [
     "pyside6",
-    "package2",
+    "python-magic-bin",
     "package3"
 ]  # Add more package names as needed
 

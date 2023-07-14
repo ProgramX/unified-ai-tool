@@ -40,6 +40,7 @@ class FileTreeView(QWidget):
         if not self.model.isDir(index):
             # Code to open the file goes here
             print("Opening file:", file_path)
+            Module.notify(Notif("open_file", file_path))
 
     def show_context_menu(self, pos):
         index = self.file_tree_view.indexAt(pos)
@@ -64,23 +65,24 @@ class FileTreeView(QWidget):
                 open_action = menu.addAction("Open")
 
             action = menu.exec_(self.file_tree_view.viewport().mapToGlobal(pos))
+            # TODO: FILES AND DIRECTORIES ARE ALMOST TREATED SAME, SO ERRORS MAY ARISE
             if action:
                 file_path = self.model.filePath(index)
                 if action == new_file_action:
                     print("New File action triggered" + file_path)
-                    # Perform the desired action for "New File"
+                    Module.notify(Notif("create_file", file_path))
                 elif action == new_directory_action:
                     print("New Directory action triggered" + file_path)
-                    # Perform the desired action for "New Directory"
+                    Module.notify(Notif("create_directory", file_path))
                 elif action == rename_action:
                     print("Rename action triggered" + file_path)
-                    # Perform the desired action for "Rename"
+                    Module.notify(Notif("rename_file", file_path))
                 elif action == delete_action:
                     print("Delete action triggered" + file_path)
-                    # Perform the desired action for "Delete"
+                    Module.notify(Notif("delete_file", file_path))
                 elif action == open_action:
                     print("Open action triggered" + file_path)
-                    # Perform the desired action for "Open"
+                    Module.notify(Notif("open_file", file_path))
 
 
 
